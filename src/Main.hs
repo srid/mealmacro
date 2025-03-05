@@ -72,11 +72,14 @@ nutritionParser = do
 
 -- Per 100g
 data Nutrition = Nutrition
-  { protein :: Double,
-    fat :: Double,
-    carbs :: Double
+  { protein :: Rational,
+    fat :: Rational,
+    carbs :: Rational
   }
   deriving stock (Show, Eq, Ord)
+
+baseQuantity :: Rational
+baseQuantity = 100
 
 instance Semigroup Nutrition where
   (Nutrition p1 f1 c1) <> (Nutrition p2 f2 c2) = Nutrition (p1 + p2) (f1 + f2) (c1 + c2)
@@ -85,25 +88,25 @@ instance Monoid Nutrition where
   mempty = Nutrition 0 0 0
 
 -- FIXME: grams should be part of out data
-scaleNutritionToGrams :: Nutrition -> Double -> Nutrition
-scaleNutritionToGrams (Nutrition p f c) grams = Nutrition (p * grams / 100) (f * grams / 100) (c * grams / 100)
+scaleNutritionToGrams :: Nutrition -> Rational -> Nutrition
+scaleNutritionToGrams (Nutrition p f c) grams =
+  Nutrition (p * grams / baseQuantity) (f * grams / baseQuantity) (c * grams / baseQuantity)
 
-nutritionCalories :: Nutrition -> Double
+nutritionCalories :: Nutrition -> Rational
 nutritionCalories (Nutrition p f c) = p * 4 + f * 9 + c * 4
 
-type Meal = [(Food, Double)]
+type Meal = [(Food, Rational)]
 
 printMealMacros :: Meal -> IO ()
 printMealMacros meal = do
   let totalNutrition = sumNutrition meal
-  putStrLn $ Shower.shower meal
+  putStrLn $ Shower.shower $ meal <&> second (round @_ @Int)
   putStrLn "Total Nutrition:"
-  -- TODO: Use round here
-  putStrLn $ "Protein: " ++ printf "%0.0f" (protein totalNutrition)
-  putStrLn $ "Fat: " ++ printf "%0.0f" (fat totalNutrition)
-  putStrLn $ "Carbs: " ++ printf "%0.0f" (carbs totalNutrition)
-  putStrLn $ "Calories: " ++ printf "%0.0f" (nutritionCalories totalNutrition)
-  putStrLn $ "Fat:Protein ratio: " ++ printf "%.2f" (fat totalNutrition / protein totalNutrition)
+  putStrLn $ "Protein: " ++ show (round @_ @Int $ protein totalNutrition)
+  putStrLn $ "Fat: " ++ show (round @_ @Int $ fat totalNutrition)
+  putStrLn $ "Carbs: " ++ show (toDecimal $ carbs totalNutrition)
+  putStrLn $ "Calories: " ++ show (round @_ @Int $ nutritionCalories totalNutrition)
+  putStrLn $ "Fat:Protein ratio: " ++ printf "%.2f" (toDecimal $ fat totalNutrition / protein totalNutrition)
   putStrLn "----"
 
 sumNutrition :: Meal -> Nutrition
@@ -113,3 +116,6 @@ sumNutrition meal =
 
 read :: (HasCallStack, Read a) => String -> a
 read = fromMaybe (error "Bad input") . readMaybe
+
+toDecimal :: Rational -> Double
+toDecimal r = fromIntegral (numerator r) / fromIntegral (denominator r)
