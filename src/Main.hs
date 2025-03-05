@@ -35,9 +35,9 @@ main = do
       ]
     printMealMacros
       "Salmon+Sausage (3 saussages)"
-      [ (SalmonAtlantic, 350),
+      [ (SalmonAtlantic, 370),
         (SausageDuBretonMildItalian, 300),
-        (Butter, 113 * 0.6)
+        (Butter, 113 * 0.66)
       ]
     printMealMacros
       "Costco Beef+Butter"
@@ -103,10 +103,11 @@ printMealMacros :: Text -> Meal -> IO ()
 printMealMacros title meal = do
   let totalNutrition = sumNutrition meal
   putTextLn $ "## \ESC[1;4m" <> title <> "\ESC[0m"
+  let bar n = "\t\ESC[90m" ++ join (replicate (round @_ @Int $ n / 5) "◍") ++ "\ESC[0m"
   forM_ meal $ \(food, quantity) -> do
     putStrLn $ printf "%30s\t=> %ig" (show @Text food) (round @_ @Int $ quantity)
-  putStrLn $ "Protein:\t" ++ show (round @_ @Int $ protein totalNutrition)
-  putStrLn $ "Fat:\t\t" ++ show (round @_ @Int $ fat totalNutrition)
+  putStrLn $ "Fat:\t\t" ++ show (round @_ @Int $ fat totalNutrition) ++ bar (fat totalNutrition)
+  putStrLn $ "Protein:\t" ++ show (round @_ @Int $ protein totalNutrition) ++ bar (protein totalNutrition)
   putStrLn $ "Carbs:\t\t" ++ show (toDecimal $ carbs totalNutrition)
   putStrLn $ "Calories:\t" ++ show (round @_ @Int $ nutritionCalories totalNutrition)
   putStrLn $ "Fat:Protein:\t" ++ printf "\ESC[1m%.2f\ESC[0m" (toDecimal $ fat totalNutrition / protein totalNutrition)
