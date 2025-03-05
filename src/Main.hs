@@ -35,9 +35,9 @@ main = do
       ]
     printMealMacros
       "Salmon+Sausage (3 saussages)"
-      [ (SalmonAtlantic, 370),
+      [ (SalmonAtlantic, 400),
         (SausageDuBretonMildItalian, 300),
-        (Butter, 113 * 0.66)
+        (Butter, 113 * 0.67)
       ]
     printMealMacros
       "Costco Beef+Butter"
