@@ -52,6 +52,7 @@ common shared
     , data-default
     , directory
     , filepath
+    , megaparsec
     , mtl
     , optics-core
     , profunctors
