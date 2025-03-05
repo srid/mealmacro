@@ -15,7 +15,7 @@ data Food
   = SalmonAtlantic
   | Butter
   | SausageDuBretonMildItalian -- https://www.dubreton.com/en-ca/products/all-natural/mild-italian-sausages
-  | KirklandGroundBeef
+  | CostcoKirklandGroundBeef
   deriving stock (Show, Eq, Ord)
 
 foodNutrition :: Food -> Nutrition
@@ -23,27 +23,24 @@ foodNutrition = \case
   SalmonAtlantic -> read "20p 13f 0c"
   Butter -> read "1p 81f 0c"
   SausageDuBretonMildItalian -> read "14p 22f 1c"
-  KirklandGroundBeef -> read "19p 15f 0c"
-
-salmonSausageMeal :: Meal
-salmonSausageMeal =
-  [ (SalmonAtlantic, 300)
-  , (SausageDuBretonMildItalian, 400)
-  , (Butter, 113 / 2)
-  ]
+  CostcoKirklandGroundBeef -> read "19p 15f 0c"
 
 main :: IO ()
 main = do
   Utf8.withUtf8 $ do
-    printMealMacros salmonSausageMeal
     printMealMacros
-      [ (SalmonAtlantic, 350)
-      , (SausageDuBretonMildItalian, 300)
-      , (Butter, 113 * 0.6)
+      [ (SalmonAtlantic, 300),
+        (SausageDuBretonMildItalian, 400),
+        (Butter, 113 / 2)
       ]
     printMealMacros
-      [ (KirklandGroundBeef, 600)
-      , (Butter, 113)
+      [ (SalmonAtlantic, 350),
+        (SausageDuBretonMildItalian, 300),
+        (Butter, 113 * 0.6)
+      ]
+    printMealMacros
+      [ (CostcoKirklandGroundBeef, 600),
+        (Butter, 113)
       ]
 
 -- ---------------------------------------------
@@ -57,9 +54,8 @@ instance Read Nutrition where
 
 type Parser = Parsec Void String
 
-{- | Parse `12f 13p 1c` into Nutrition {protein=12, fat=13, carbs=1}
-Use megaparsec to parse the input string into a Nutrition value
--}
+-- | Parse `12f 13p 1c` into Nutrition {protein=12, fat=13, carbs=1}
+-- Use megaparsec to parse the input string into a Nutrition value
 parseNutrition :: String -> Maybe Nutrition
 parseNutrition input = do
   rightToMaybe $ parse nutritionParser "<>" input
@@ -75,9 +71,9 @@ nutritionParser = do
 
 -- Per 100g
 data Nutrition = Nutrition
-  { protein :: Double
-  , fat :: Double
-  , carbs :: Double
+  { protein :: Double,
+    fat :: Double,
+    carbs :: Double
   }
   deriving stock (Show, Eq, Ord)
 
