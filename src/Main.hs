@@ -3,7 +3,6 @@
 module Main where
 
 import Main.Utf8 qualified as Utf8
-import Shower qualified
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
@@ -29,16 +28,19 @@ main :: IO ()
 main = do
   Utf8.withUtf8 $ do
     printMealMacros
+      "Salmon+Saussage (4 sausages)"
       [ (SalmonAtlantic, 300),
         (SausageDuBretonMildItalian, 400),
         (Butter, 113 / 2)
       ]
     printMealMacros
+      "Salmon+Sausage (3 saussages)"
       [ (SalmonAtlantic, 350),
         (SausageDuBretonMildItalian, 300),
         (Butter, 113 * 0.6)
       ]
     printMealMacros
+      "Costco Beef+Butter"
       [ (CostcoKirklandGroundBeef, 600),
         (Butter, 113)
       ]
@@ -97,17 +99,18 @@ nutritionCalories (Nutrition p f c) = p * 4 + f * 9 + c * 4
 
 type Meal = [(Food, Rational)]
 
-printMealMacros :: Meal -> IO ()
-printMealMacros meal = do
+printMealMacros :: Text -> Meal -> IO ()
+printMealMacros title meal = do
   let totalNutrition = sumNutrition meal
-  putStrLn $ Shower.shower $ meal <&> second (round @_ @Int)
-  putStrLn "Total Nutrition:"
-  putStrLn $ "Protein: " ++ show (round @_ @Int $ protein totalNutrition)
-  putStrLn $ "Fat: " ++ show (round @_ @Int $ fat totalNutrition)
-  putStrLn $ "Carbs: " ++ show (toDecimal $ carbs totalNutrition)
-  putStrLn $ "Calories: " ++ show (round @_ @Int $ nutritionCalories totalNutrition)
-  putStrLn $ "Fat:Protein ratio: " ++ printf "%.2f" (toDecimal $ fat totalNutrition / protein totalNutrition)
-  putStrLn "----"
+  putTextLn $ "## \ESC[1;4m" <> title <> "\ESC[0m"
+  forM_ meal $ \(food, quantity) -> do
+    putStrLn $ printf "%30s\t=> %ig" (show @Text food) (round @_ @Int $ quantity)
+  putStrLn $ "Protein:\t" ++ show (round @_ @Int $ protein totalNutrition)
+  putStrLn $ "Fat:\t\t" ++ show (round @_ @Int $ fat totalNutrition)
+  putStrLn $ "Carbs:\t\t" ++ show (toDecimal $ carbs totalNutrition)
+  putStrLn $ "Calories:\t" ++ show (round @_ @Int $ nutritionCalories totalNutrition)
+  putStrLn $ "Fat:Protein:\t" ++ printf "\ESC[1m%.2f\ESC[0m" (toDecimal $ fat totalNutrition / protein totalNutrition)
+  putStrLn ""
 
 sumNutrition :: Meal -> Nutrition
 sumNutrition meal =
