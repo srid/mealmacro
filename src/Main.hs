@@ -3,6 +3,7 @@
 module Main where
 
 import Main.Utf8 qualified as Utf8
+import Shower qualified
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as L
@@ -48,7 +49,7 @@ type Meal = [(Food, Double)]
 printMealMacros :: Meal -> IO ()
 printMealMacros meal = do
   let totalNutrition = sumNutrition meal
-  putStrLn $ "Meal: " <> show meal
+  putStrLn $ Shower.shower meal
   putStrLn "Total Nutrition:"
   -- TODO: Use round here
   putStrLn $ "Protein: " ++ printf "%0.0f" (protein totalNutrition)
