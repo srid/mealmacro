@@ -20,10 +20,10 @@ data Food
 
 foodNutrition :: Food -> Nutrition
 foodNutrition = \case
-  SalmonAtlantic -> read "20p 13f 0c"
-  Butter -> read "1p 81f 0c"
+  SalmonAtlantic -> read "20p 13f"
+  Butter -> read "1p 81f"
   SausageDuBretonMildItalian -> read "14p 22f 1c"
-  CostcoKirklandGroundBeef -> read "19p 15f 0c"
+  CostcoKirklandGroundBeef -> read "19p 15f"
 
 main :: IO ()
 main = do
@@ -66,7 +66,8 @@ nutritionParser = do
   void space
   fat <- L.decimal <* char 'f'
   void space
-  carbs <- L.decimal <* char 'c'
+  mcarbs <- optional $ L.decimal <* char 'c'
+  let carbs = fromMaybe 0 mcarbs
   pure $ Nutrition {protein, fat, carbs}
 
 -- Per 100g
