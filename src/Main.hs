@@ -27,22 +27,18 @@ foodNutrition = \case
 main :: IO ()
 main = do
   Utf8.withUtf8 $ do
-    printMealMacros
-      "Salmon+Saussage (4 sausages)"
-      [ (SalmonAtlantic, 300),
-        (SausageDuBretonMildItalian, 400),
-        (Butter, 113 / 2)
-      ]
+    putStrLn "=> https://calculo.io/keto-calculator"
+    putStrLn "   To maintain 156 lbs => 178f & 102p (1.8 ratio)"
     printMealMacros
       "Salmon+Sausage (3 saussages)"
       [ (SalmonAtlantic, 400),
         (SausageDuBretonMildItalian, 300),
-        (Butter, 113 * 0.67)
+        (Butter, 113 * 0.50)
       ]
     printMealMacros
       "Costco Beef+Butter"
       [ (CostcoKirklandGroundBeef, 600),
-        (Butter, 113)
+        (Butter, 113 * 1.0)
       ]
 
 -- ---------------------------------------------
