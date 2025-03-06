@@ -36,7 +36,7 @@ main = do
     putStrLn "=> https://calculo.io/keto-calculator"
     putStrLn "   To maintain 156 lbs => 178f & 102p (1.8 ratio)"
     printMealMacros
-      "Salmon+Sausage (3 saussages)"
+      "Salmon+Sausage (3 sausages)"
       [ (SalmonAtlantic, 400),
         (SausageDuBretonMildItalian, 300),
         (Butter, 113 * 0.50)
@@ -45,7 +45,7 @@ main = do
       "Costco Beef+Butter"
       [ (CostcoKirklandGroundBeef, 600),
         (Butter, 113 * 0.50),
-        (Tallow, 30)
+        (Tallow, 20)
       ]
     printMealMacros
       "Salmon+Sausage (take 2)"
