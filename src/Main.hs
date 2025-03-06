@@ -12,9 +12,12 @@ import Prelude hiding (some)
 
 data Food
   = SalmonAtlantic
-  | Butter
   | SausageDuBretonMildItalian -- https://www.dubreton.com/en-ca/products/all-natural/mild-italian-sausages
   | CostcoKirklandGroundBeef
+  | Butter
+  | Tallow
+  | Egg
+  | Shrimp
   deriving stock (Show, Eq, Ord)
 
 foodNutrition :: Food -> Nutrition
@@ -23,6 +26,9 @@ foodNutrition = \case
   Butter -> read "1p 81f"
   SausageDuBretonMildItalian -> read "14p 22f 1c"
   CostcoKirklandGroundBeef -> read "19p 15f"
+  Tallow -> read "0p 100f"
+  Egg -> read "13p 11f 1c"
+  Shrimp -> read "20p 0f"
 
 main :: IO ()
 main = do
@@ -38,7 +44,22 @@ main = do
     printMealMacros
       "Costco Beef+Butter"
       [ (CostcoKirklandGroundBeef, 600),
-        (Butter, 113 * 1.0)
+        (Butter, 113 * 0.50),
+        (Tallow, 30)
+      ]
+    printMealMacros
+      "Salmon+Sausage (take 2)"
+      [ (SalmonAtlantic, 300),
+        (SausageDuBretonMildItalian, 400),
+        (Butter, 113 * 0.50)
+      ]
+    printMealMacros
+      "New"
+      [ (SausageDuBretonMildItalian, 100),
+        (Egg, 50 * 6),
+        (Shrimp, 100),
+        (SalmonAtlantic, 200),
+        (Butter, 113)
       ]
 
 -- ---------------------------------------------
