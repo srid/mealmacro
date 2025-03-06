@@ -23,12 +23,12 @@ data Food
 foodNutrition :: Food -> Nutrition
 foodNutrition = \case
   SalmonAtlantic -> read "20p 13f"
-  Butter -> read "1p 81f"
+  Butter -> read "0.9p 81f 0.1c"
   SausageDuBretonMildItalian -> read "14p 22f 1c"
   CostcoKirklandGroundBeef -> read "19p 15f"
   Tallow -> read "0p 100f"
-  Egg -> read "13p 11f 1c"
-  Shrimp -> read "20p 0f"
+  Egg -> read "13p 10f 0.7c"
+  Shrimp -> read "20p 0.3f 0.2c"
 
 main :: IO ()
 main = do
@@ -57,9 +57,9 @@ main = do
       "New"
       [ (SausageDuBretonMildItalian, 100),
         (Egg, 50 * 6),
-        (Shrimp, 100),
+        (Shrimp, 130),
         (SalmonAtlantic, 200),
-        (Butter, 113)
+        (Butter, 113 * 0.9)
       ]
 
 -- ---------------------------------------------
@@ -81,11 +81,12 @@ parseNutrition input = do
 
 nutritionParser :: Parser Nutrition
 nutritionParser = do
-  protein <- L.decimal <* char 'p'
+  let rational = fmap (toRational @Double) $ try L.float <|> L.decimal
+  protein <- rational <* char 'p'
   void space
-  fat <- L.decimal <* char 'f'
+  fat <- rational <* char 'f'
   void space
-  mcarbs <- optional $ L.decimal <* char 'c'
+  mcarbs <- optional $ rational <* char 'c'
   let carbs = fromMaybe 0 mcarbs
   pure $ Nutrition {protein, fat, carbs}
 
@@ -125,7 +126,7 @@ printMealMacros title meal = do
     putStrLn $ printf "%30s\t=> %ig" (show @Text food) (round @_ @Int $ quantity)
   putStrLn $ "Fat:\t\t" ++ show (round @_ @Int $ fat totalNutrition) ++ bar (fat totalNutrition)
   putStrLn $ "Protein:\t" ++ show (round @_ @Int $ protein totalNutrition) ++ bar (protein totalNutrition)
-  putStrLn $ "Carbs:\t\t" ++ show (toDecimal $ carbs totalNutrition)
+  putStrLn $ "Carbs:\t\t" ++ show (round @_ @Int $ carbs totalNutrition)
   putStrLn $ "Calories:\t" ++ show (round @_ @Int $ nutritionCalories totalNutrition)
   putStrLn $ "Fat:Protein:\t" ++ printf "\ESC[1m%.2f\ESC[0m" (toDecimal $ fat totalNutrition / protein totalNutrition)
   putStrLn ""
@@ -136,7 +137,7 @@ sumNutrition meal =
     first foodNutrition <$> meal
 
 read :: (HasCallStack, Read a) => String -> a
-read = fromMaybe (error "Bad input") . readMaybe
+read s = fromMaybe (error $ toText $ "Bad input: " ++ s) $ readMaybe s
 
 toDecimal :: Rational -> Double
 toDecimal r = fromIntegral (numerator r) / fromIntegral (denominator r)
