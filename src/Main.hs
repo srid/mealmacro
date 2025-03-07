@@ -13,11 +13,16 @@ import Prelude hiding (some)
 data Food
   = SalmonAtlantic
   | SausageDuBretonMildItalian -- https://www.dubreton.com/en-ca/products/all-natural/mild-italian-sausages
+  | DuBretonBaconBlackForest
   | CostcoKirklandGroundBeef
+  | CostcoKirklandScallop
+  | CostcoKirklandSockeyeSalmon
+  | FontaineLeanGroundVeal
   | Butter
   | Tallow
   | Egg
   | Shrimp
+  | PorkBelly
   deriving stock (Show, Eq, Ord)
 
 foodNutrition :: Food -> Nutrition
@@ -25,10 +30,15 @@ foodNutrition = \case
   SalmonAtlantic -> read "20p 13f"
   Butter -> read "0.9p 81f 0.1c"
   SausageDuBretonMildItalian -> read "14p 22f 1c"
+  DuBretonBaconBlackForest -> read "9p 19f 0c 56g"
   CostcoKirklandGroundBeef -> read "19p 15f"
+  CostcoKirklandScallop -> read "21p 0.5f 125g"
+  CostcoKirklandSockeyeSalmon -> read "28p 6f 125g"
+  FontaineLeanGroundVeal -> read "18p 14f"
   Tallow -> read "0p 100f"
   Egg -> read "13p 10f 0.7c"
   Shrimp -> read "20p 0.3f 0.2c"
+  PorkBelly -> read "9p 53f"
 
 main :: IO ()
 main = do
@@ -48,18 +58,20 @@ main = do
         (Tallow, 20)
       ]
     printMealMacros
-      "Salmon+Sausage (take 2)"
-      [ (SalmonAtlantic, 300),
-        (SausageDuBretonMildItalian, 400),
-        (Butter, 113 * 0.50)
-      ]
-    printMealMacros
-      "New"
+      "Egg mélange"
       [ (SausageDuBretonMildItalian, 100),
         (Egg, 50 * 6),
         (Shrimp, 130),
         (SalmonAtlantic, 200),
         (Butter, 113 * 0.9)
+      ]
+    printMealMacros
+      "Veal and Pork"
+      [ (SausageDuBretonMildItalian, 100),
+        (FontaineLeanGroundVeal, 454),
+        -- (Tallow, 10),
+        (PorkBelly, 100),
+        (DuBretonBaconBlackForest, 70)
       ]
 
 -- ---------------------------------------------
@@ -88,7 +100,12 @@ nutritionParser = do
   void space
   mcarbs <- optional $ rational <* char 'c'
   let carbs = fromMaybe 0 mcarbs
-  pure $ Nutrition {protein, fat, carbs}
+  let nutrition = Nutrition {protein, fat, carbs}
+  void space
+  mquantity <- optional $ rational <* char 'g'
+  case mquantity of
+    Nothing -> pure nutrition
+    Just quantity -> pure $ scaleNutritionToGrams' quantity nutrition 100
 
 -- Per 100g
 data Nutrition = Nutrition
@@ -111,6 +128,10 @@ instance Monoid Nutrition where
 scaleNutritionToGrams :: Nutrition -> Rational -> Nutrition
 scaleNutritionToGrams (Nutrition p f c) grams =
   Nutrition (p * grams / baseQuantity) (f * grams / baseQuantity) (c * grams / baseQuantity)
+
+scaleNutritionToGrams' :: Rational -> Nutrition -> Rational -> Nutrition
+scaleNutritionToGrams' q (Nutrition p f c) grams =
+  Nutrition (p * grams / q) (f * grams / q) (c * grams / q)
 
 nutritionCalories :: Nutrition -> Rational
 nutritionCalories (Nutrition p f c) = p * 4 + f * 9 + c * 4
