@@ -12,7 +12,7 @@ import Prelude hiding (some)
 
 data Food
   = SalmonAtlantic
-  | SausageDuBretonMildItalian -- https://www.dubreton.com/en-ca/products/all-natural/mild-italian-sausages
+  | DuBretonSausageMildItalian -- https://www.dubreton.com/en-ca/products/all-natural/mild-italian-sausages
   | DuBretonBaconBlackForest
   | CostcoKirklandGroundBeef
   | CostcoKirklandScallop
@@ -29,7 +29,7 @@ foodNutrition :: Food -> Nutrition
 foodNutrition = \case
   SalmonAtlantic -> read "20p 13f"
   Butter -> read "0.9p 81f 0.1c"
-  SausageDuBretonMildItalian -> read "14p 22f 1c"
+  DuBretonSausageMildItalian -> read "14p 22f 1c"
   DuBretonBaconBlackForest -> read "9p 19f 0c 56g"
   CostcoKirklandGroundBeef -> read "19p 15f"
   CostcoKirklandScallop -> read "21p 0.5f 125g"
@@ -49,7 +49,7 @@ main = do
     printMealMacros
       "Salmon+Sausage (3 sausages)"
       [ (SalmonAtlantic, 400),
-        (SausageDuBretonMildItalian, 300),
+        (DuBretonSausageMildItalian, 300),
         (Butter, 113 * 0.50)
       ]
     printMealMacros
@@ -60,7 +60,7 @@ main = do
       ]
     printMealMacros
       "Egg mélange"
-      [ (SausageDuBretonMildItalian, 100),
+      [ (DuBretonSausageMildItalian, 100),
         (Egg, 50 * 6),
         (Shrimp, 130),
         (SalmonAtlantic, 200),
@@ -68,7 +68,7 @@ main = do
       ]
     printMealMacros
       "Veal and Pork"
-      [ (SausageDuBretonMildItalian, 100),
+      [ (DuBretonSausageMildItalian, 100),
         (FontaineLeanGroundVeal, 454),
         -- (Tallow, 10),
         (PorkBelly, 100),
@@ -170,7 +170,7 @@ tests = do
   let n =
         sumNutrition
           [ (SalmonAtlantic, 400),
-            (SausageDuBretonMildItalian, 300),
+            (DuBretonSausageMildItalian, 300),
             (Butter, 113 * 0.50)
           ]
       roundTo :: Int -> Double -> Double
