@@ -44,20 +44,34 @@ data Food
   | PorkBelly
   deriving stock (Show, Eq, Ord)
 
+{- ORMOLU_DISABLE -}
 foodNutrition :: Food -> Nutrition
 foodNutrition = \case
-  SalmonAtlantic -> def & protein .~ 20 & fat .~ 13
-  Butter -> def & protein .~ 0.9 & fat .~ 81 & carbs .~ 0.1
-  DuBretonSausageMildItalian -> def & protein .~ 14 & fat .~ 22 & carbs .~ 1
-  DuBretonBaconBlackForest -> def & protein .~ 9 & fat .~ 19 & quantity .~ 56
-  CostcoKirklandGroundBeef -> def & protein .~ 19 & fat .~ 15
-  CostcoKirklandScallop -> def & protein .~ 21 & fat .~ 0.5 & quantity .~ 125
-  CostcoKirklandSockeyeSalmon -> def & protein .~ 28 & fat .~ 6 & quantity .~ 125
-  FontaineLeanGroundVeal -> def & protein .~ 18 & fat .~ 14
-  Tallow -> def & fat .~ 100
-  Egg -> def & protein .~ 13 & fat .~ 10 & carbs .~ 0.7
-  Shrimp -> def & protein .~ 20 & fat .~ 0.3 & carbs .~ 0.2
-  PorkBelly -> def & protein .~ 9 & fat .~ 53
+  SalmonAtlantic ->
+    def & protein .~ 20  & fat .~ 13
+  Butter ->
+    def & protein .~ 0.9 & fat .~ 81  & carbs .~ 0.1
+  DuBretonSausageMildItalian ->
+    def & protein .~ 14  & fat .~ 22  & carbs .~ 1
+  DuBretonBaconBlackForest ->
+    def & protein .~ 9   & fat .~ 19                   & quantity .~ 56
+  CostcoKirklandGroundBeef ->
+    def & protein .~ 19  & fat .~ 15
+  CostcoKirklandScallop ->
+    def & protein .~ 21  & fat .~ 0.5                  & quantity .~ 125
+  CostcoKirklandSockeyeSalmon ->
+    def & protein .~ 28  & fat .~ 6                    & quantity .~ 125
+  FontaineLeanGroundVeal ->
+    def & protein .~ 18  & fat .~ 14
+  Tallow ->
+    def                  & fat .~ 100
+  Egg ->
+    def & protein .~ 13  & fat .~ 10  & carbs .~ 0.7
+  Shrimp ->
+    def & protein .~ 20  & fat .~ 0.3 & carbs .~ 0.2
+  PorkBelly ->
+    def & protein .~ 9   & fat .~ 53
+{- ORMOLU_ENABLE -}
 
 main :: IO ()
 main = do
@@ -110,7 +124,7 @@ type Meal = [(Food, Rational)]
 printMealMacros :: Text -> Meal -> IO ()
 printMealMacros title meal = do
   let totalNutrition = sumNutrition meal
-  putTextLn $ "## \ESC[1;4m" <> title <> "\ESC[0m"
+  putTextLn $ "## \ESC[1;4m" <> title <> "\ESC[0m" <> " (" <> show (round @_ @Int $ _quantity totalNutrition) <> "g)"
   let bar n = "\t\ESC[90m" ++ join (replicate (round @_ @Int $ n / 5) "◍") ++ "\ESC[0m"
   forM_ meal $ \(food, quantity') -> do
     putStrLn $ printf "%30s\t=> %ig" (show @Text food) (round @_ @Int $ quantity')
@@ -122,12 +136,11 @@ printMealMacros title meal = do
   putStrLn ""
 
 sumNutrition :: Meal -> Nutrition
-sumNutrition meal =
-  foldl' (\acc (food, quantity') -> acc <> scaleNutritionToGrams food quantity') mempty $
-    first foodNutrition <$> meal
-
-read :: (HasCallStack, Read a) => String -> a
-read s = fromMaybe (error $ toText $ "Bad input: " ++ s) $ readMaybe s
+sumNutrition meal = mconcat nutritions
+  where
+    nutritions =
+      meal <&> \(food, q) ->
+        scaleNutritionToGrams (foodNutrition food) q
 
 toDecimal :: Rational -> Double
 toDecimal r = fromIntegral (numerator r) / fromIntegral (denominator r)
