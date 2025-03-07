@@ -1,7 +1,15 @@
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 module Main where
 
+import Data.Constraint.Extras.TH
+import Data.Dependent.Map
+import Data.Dependent.Map qualified as DMap
+import Data.Dependent.Sum
+import Data.GADT.Compare.TH (deriveGCompare, deriveGEq)
+import Data.GADT.Show.TH (deriveGShow)
 import Main.Utf8 qualified as Utf8
 import Text.Megaparsec
 import Text.Megaparsec.Char
@@ -180,3 +188,27 @@ tests = do
   if actual == expected
     then putStrLn "Test passed"
     else error $ "Test failed: " <> show actual
+
+data Grams a where
+  Protein :: Grams Rational
+  Fat :: Grams Rational
+  Carbs :: Grams Rational
+  Quantity :: Grams Rational
+
+data Foodstuff a where
+  FBacon :: Foodstuff [DSum Grams Identity]
+
+deriveGEq ''Grams
+deriveGCompare ''Grams
+deriveGShow ''Grams
+deriveArgDict ''Grams
+deriveGEq ''Foodstuff
+deriveGCompare ''Foodstuff
+deriveGShow ''Foodstuff
+deriveArgDict ''Foodstuff
+
+foodStuff :: DMap Foodstuff Identity
+foodStuff =
+  DMap.fromList
+    [ FBacon ==> [Quantity ==> 100, Protein ==> 10, Fat ==> 20, Carbs ==> 30]
+    ]

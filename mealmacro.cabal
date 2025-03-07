@@ -48,15 +48,19 @@ common shared
   build-depends:
     , aeson
     , async
-    , base          >=4   && <5
+    , base                    >=4   && <5
+    , constraints-extras
     , data-default
+    , dependent-map
+    , dependent-sum
+    , dependent-sum-template
     , directory
     , filepath
     , megaparsec
     , mtl
     , optics-core
     , profunctors
-    , relude        >=1.0
+    , relude                  >=1.0
     , shower
     , time
     , with-utf8
