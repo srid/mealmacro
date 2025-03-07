@@ -43,6 +43,7 @@ foodNutrition = \case
 main :: IO ()
 main = do
   Utf8.withUtf8 $ do
+    tests
     putStrLn "=> https://calculo.io/keto-calculator"
     putStrLn "   To maintain 156 lbs => 178f & 102p (1.8 ratio)"
     printMealMacros
@@ -162,3 +163,20 @@ read s = fromMaybe (error $ toText $ "Bad input: " ++ s) $ readMaybe s
 
 toDecimal :: Rational -> Double
 toDecimal r = fromIntegral (numerator r) / fromIntegral (denominator r)
+
+-- TODO: tidy it up.
+tests :: IO ()
+tests = do
+  let n =
+        sumNutrition
+          [ (SalmonAtlantic, 400),
+            (SausageDuBretonMildItalian, 300),
+            (Butter, 113 * 0.50)
+          ]
+      roundTo :: Int -> Double -> Double
+      roundTo num x = fromIntegral @Int @Double (round (x * 10 ^ num)) / 10 ^ num
+      actual = roundTo 2 $ toDecimal $ fat n / protein n
+      expected = roundTo 2 1.34
+  if actual == expected
+    then putStrLn "Test passed"
+    else error $ "Test failed: " <> show actual
