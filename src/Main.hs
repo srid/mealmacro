@@ -31,7 +31,7 @@ instance Monoid Nutrition where
 
 data Food
   = SalmonAtlantic
-  | DuBretonSausageMildItalian -- https://www.dubreton.com/en-ca/products/all-natural/mild-italian-sausages
+  | DuBretonSausageFrenchOnion
   | DuBretonBaconBlackForest
   | CostcoKirklandGroundBeef
   | CostcoKirklandScallop
@@ -39,9 +39,12 @@ data Food
   | FontaineLeanGroundVeal
   | Butter
   | Tallow
-  | Egg
+  | Egg -- A large egg
   | Shrimp
   | PorkBelly
+  | PorkBelly_NoRenderedFat
+  | Liver
+  | QuebonWhippingCream
   deriving stock (Show, Eq, Ord)
 
 {- ORMOLU_DISABLE -}
@@ -51,7 +54,7 @@ foodNutrition = \case
     def & protein .~ 20  & fat .~ 13
   Butter ->
     def & protein .~ 0.9 & fat .~ 81  & carbs .~ 0.1
-  DuBretonSausageMildItalian ->
+  DuBretonSausageFrenchOnion ->
     def & protein .~ 14  & fat .~ 22  & carbs .~ 1
   DuBretonBaconBlackForest ->
     def & protein .~ 9   & fat .~ 19                   & quantity .~ 56
@@ -66,11 +69,17 @@ foodNutrition = \case
   Tallow ->
     def                  & fat .~ 100
   Egg ->
-    def & protein .~ 13  & fat .~ 10  & carbs .~ 0.7
+    def & protein .~ 6  & fat .~ 5  & carbs .~ 0.6     & quantity .~ 50
   Shrimp ->
     def & protein .~ 20  & fat .~ 0.3 & carbs .~ 0.2
   PorkBelly ->
     def & protein .~ 9   & fat .~ 53
+  PorkBelly_NoRenderedFat ->
+    def & protein .~ 9   & fat .~ 31
+  Liver ->
+    def & protein .~ 26  & fat .~ 4.4 & carbs .~ 3.8
+  QuebonWhippingCream ->
+    def & protein .~ 0.3 & fat .~ 5   & carbs .~ 1    & quantity .~ 15
 {- ORMOLU_ENABLE -}
 
 main :: IO ()
@@ -82,30 +91,76 @@ main = do
     printMealMacros
       "Salmon+Sausage (3 sausages)"
       [ (SalmonAtlantic, 400),
-        (DuBretonSausageMildItalian, 300),
+        (DuBretonSausageFrenchOnion, 300),
         (Butter, 113 * 0.50)
       ]
     printMealMacros
-      "Costco Beef+Butter"
+      "Costco Beef+Half Butter"
       [ (CostcoKirklandGroundBeef, 600),
         (Butter, 113 * 0.50),
         (Tallow, 20)
       ]
     printMealMacros
-      "Egg mélange"
-      [ (DuBretonSausageMildItalian, 100),
-        (Egg, 50 * 6),
-        (Shrimp, 130),
-        (SalmonAtlantic, 200),
-        (Butter, 113 * 0.9)
+      "Veal and Pork Belly"
+      [ (DuBretonSausageFrenchOnion, 100),
+        (FontaineLeanGroundVeal, 454),
+        (PorkBelly, 94),
+        (DuBretonBaconBlackForest, 56),
+        (Egg, 50 * 3)
       ]
     printMealMacros
-      "Veal and Pork"
-      [ (DuBretonSausageMildItalian, 100),
-        (FontaineLeanGroundVeal, 454),
-        -- (Tallow, 10),
-        (PorkBelly, 100),
-        (DuBretonBaconBlackForest, 70)
+      "Egg mélange"
+      [ (DuBretonSausageFrenchOnion, 200),
+        (DuBretonBaconBlackForest, 56 * 1.5),
+        (Egg, 50 * 6),
+        (SalmonAtlantic, 200),
+        (Butter, 113 * 0.50)
+      ]
+    printMealMacros
+      "Veal and Sausage"
+      [ (FontaineLeanGroundVeal, 454),
+        (Tallow, 5),
+        (DuBretonSausageFrenchOnion, 200),
+        (DuBretonBaconBlackForest, 56 * 0.5),
+        (Butter, 113 * 0.5)
+      ]
+    printMealMacros
+      "Liver..."
+      [ -- (SalmonAtlantic, 250),
+        (CostcoKirklandSockeyeSalmon, 195),
+        (Liver, 123),
+        (DuBretonSausageFrenchOnion, 200),
+        (Egg, 50 * 2),
+        (Butter, 113), -- First time doing *full* stick of butter
+        (QuebonWhippingCream, 12.9)
+      ]
+    printMealMacros
+      "Costco Beef+Butter"
+      [ (CostcoKirklandGroundBeef, 600),
+        (Butter, 113)
+      ]
+    printMealMacros
+      "Salmom & eggs"
+      [ (SalmonAtlantic, 450),
+        (Egg, 50 * 4),
+        (Butter, 113)
+      ]
+    printMealMacros
+      "Belly take 2"
+      [ (PorkBelly_NoRenderedFat, 350),
+        (CostcoKirklandScallop, 100),
+        (CostcoKirklandSockeyeSalmon, 185),
+        (Egg, 50 * 2),
+        (Butter, 113 * 0.50)
+      ]
+    printMealMacros
+      "Belly mainly"
+      [ (PorkBelly_NoRenderedFat, 700)
+      ]
+    printMealMacros
+      "Dual Bulletproof Coffee"
+      [ (Butter, 15 * 2),
+        (QuebonWhippingCream, 15 * 2)
       ]
 
 -- ---------------------------------------------
@@ -151,7 +206,7 @@ tests = do
   let n =
         sumNutrition
           [ (SalmonAtlantic, 400),
-            (DuBretonSausageMildItalian, 300),
+            (DuBretonSausageFrenchOnion, 300),
             (Butter, 113 * 0.50)
           ]
       roundTo :: Int -> Double -> Double
