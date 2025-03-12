@@ -45,6 +45,7 @@ data Food
   | PorkBelly_NoRenderedFat
   | Liver
   | QuebonWhippingCream
+  | PorkRinds_BakenETS
   deriving stock (Show, Eq, Ord)
 
 {- ORMOLU_DISABLE -}
@@ -80,6 +81,8 @@ foodNutrition = \case
     def & protein .~ 26  & fat .~ 4.4 & carbs .~ 3.8
   QuebonWhippingCream ->
     def & protein .~ 0.3 & fat .~ 5   & carbs .~ 1    & quantity .~ 15
+  PorkRinds_BakenETS ->
+    def & protein .~ 35  & fat .~ 25                  & quantity .~ 70
 {- ORMOLU_ENABLE -}
 
 main :: IO ()
@@ -120,48 +123,44 @@ main = do
       "Veal and Sausage"
       [ (FontaineLeanGroundVeal, 454),
         (Tallow, 5),
-        (DuBretonSausageFrenchOnion, 200),
+        (DuBretonSausageFrenchOnion, 100 * 2),
         (DuBretonBaconBlackForest, 56 * 0.5),
         (Butter, 113 * 0.5)
       ]
     printMealMacros
-      "Liver..."
-      [ -- (SalmonAtlantic, 250),
-        (CostcoKirklandSockeyeSalmon, 195),
+      "Liver, Salmon and Sausage"
+      [ (CostcoKirklandSockeyeSalmon, 195),
         (Liver, 123),
-        (DuBretonSausageFrenchOnion, 200),
+        (DuBretonSausageFrenchOnion, 100 * 2),
         (Egg, 50 * 2),
-        (Butter, 113), -- First time doing *full* stick of butter
+        (Butter, 113 + 15.3), -- First time doing *full* stick of butter + more
         (QuebonWhippingCream, 12.9)
       ]
     printMealMacros
-      "Costco Beef+Butter"
-      [ (CostcoKirklandGroundBeef, 600),
-        (Butter, 113)
-      ]
-    printMealMacros
-      "Salmom & eggs"
-      [ (SalmonAtlantic, 450),
-        (Egg, 50 * 4),
-        (Butter, 113)
+      "Salmom & 2 Sausages"
+      [ (SalmonAtlantic, 474),
+        (DuBretonSausageFrenchOnion, 200),
+        (Butter, 97),
+        (QuebonWhippingCream, 15)
       ]
     printMealMacros
       "Belly take 2"
-      [ (PorkBelly_NoRenderedFat, 350),
-        (CostcoKirklandScallop, 100),
-        (CostcoKirklandSockeyeSalmon, 185),
-        (Egg, 50 * 2),
-        (Butter, 113 * 0.50)
+      [ (PorkBelly_NoRenderedFat, 305),
+        (FontaineLeanGroundVeal, 454),
+        -- (Egg, 50 * 2),
+        (Butter, 40),
+        (Tallow, 10)
       ]
-    printMealMacros
-      "Belly mainly"
-      [ (PorkBelly_NoRenderedFat, 700)
-      ]
-    printMealMacros
-      "Dual Bulletproof Coffee"
-      [ (Butter, 15 * 2),
-        (QuebonWhippingCream, 15 * 2)
-      ]
+
+{-
+printMealMacros
+  "Sausages only"
+  [ (QuebonWhippingCream, 15 * 2),
+    (DuBretonSausageFrenchOnion, 100 * 4),
+    (SalmonAtlantic, 230),
+    (Butter, 100)
+  ]
+-}
 
 -- ---------------------------------------------
 -- Internal
