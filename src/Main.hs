@@ -40,12 +40,17 @@ data Food
   | Butter
   | Tallow
   | Egg -- A large egg
+  | Egg_NutriFreeRunMediumBrown
   | Shrimp
   | PorkBelly
   | PorkBelly_NoRenderedFat
   | Liver
   | QuebonWhippingCream
   | PorkRinds_BakenETS
+  | Maxi_GroundBeefMedium_NewZealand
+  | StripLoinSteak
+  | DarkChocolate_Lindt95
+  | AW_Burger_5oz
   deriving stock (Show, Eq, Ord)
 
 {- ORMOLU_DISABLE -}
@@ -71,6 +76,8 @@ foodNutrition = \case
     def                  & fat .~ 100
   Egg ->
     def & protein .~ 6  & fat .~ 5  & carbs .~ 0.6     & quantity .~ 50
+  Egg_NutriFreeRunMediumBrown ->
+    def & protein .~ 11  & fat .~ 9  & carbs .~ 1     & quantity .~ 91
   Shrimp ->
     def & protein .~ 20  & fat .~ 0.3 & carbs .~ 0.2
   PorkBelly ->
@@ -83,6 +90,16 @@ foodNutrition = \case
     def & protein .~ 0.3 & fat .~ 5   & carbs .~ 1    & quantity .~ 15
   PorkRinds_BakenETS ->
     def & protein .~ 35  & fat .~ 25                  & quantity .~ 70
+  Maxi_GroundBeefMedium_NewZealand ->
+    def & protein .~ 18  & fat .~ 19                  & quantity .~ 100
+  StripLoinSteak ->
+    -- https://www.nutritionix.com/food/new-york-strip-steak
+    def & protein .~ 22  & fat .~ 19                  & quantity .~ 85
+  DarkChocolate_Lindt95 ->
+    def & protein .~ 4   & fat .~ 18  & carbs .~ 3    & quantity .~ 32
+  AW_Burger_5oz ->
+    -- https://www.calorieking.com/us/en/foods/f/calories-in-meal-components-burger-patty/JK2WV-QzRQS8B1_gBkAivg
+    def & protein .~ 26.9  & fat .~ 29.3              & quantity .~ 141
 {- ORMOLU_ENABLE -}
 
 main :: IO ()
@@ -90,75 +107,89 @@ main = do
   Utf8.withUtf8 $ do
     tests
     putStrLn "=> https://calculo.io/keto-calculator"
-    putStrLn "   To maintain 156 lbs => 178f & 102p (1.8 ratio)"
+    putStrLn "   To maintain 153 lbs => 220f & 110p"
     printMealMacros
-      "Salmon+Sausage (3 sausages)"
-      [ (SalmonAtlantic, 400),
-        (DuBretonSausageFrenchOnion, 300),
-        (Butter, 113 * 0.50)
+      "Belly take 2"
+      [ (PorkBelly_NoRenderedFat, 300),
+        (FontaineLeanGroundVeal, 454),
+        (QuebonWhippingCream, 20),
+        (Butter, 30.6)
       ]
+
     printMealMacros
-      "Costco Beef+Half Butter"
+      "Costco Beef+Full Butter"
       [ (CostcoKirklandGroundBeef, 600),
-        (Butter, 113 * 0.50),
+        (Butter, 140),
         (Tallow, 20)
       ]
     printMealMacros
-      "Veal and Pork Belly"
-      [ (DuBretonSausageFrenchOnion, 100),
-        (FontaineLeanGroundVeal, 454),
-        (PorkBelly, 94),
-        (DuBretonBaconBlackForest, 56),
-        (Egg, 50 * 3)
+      "Scallop + Sausages"
+      [ (DuBretonSausageFrenchOnion, 100 * 4),
+        (CostcoKirklandScallop, 160),
+        (Egg, 50*4),
+        (Butter, 130)
       ]
     printMealMacros
-      "Egg mélange"
-      [ (DuBretonSausageFrenchOnion, 200),
-        (DuBretonBaconBlackForest, 56 * 1.5),
-        (Egg, 50 * 6),
-        (SalmonAtlantic, 200),
-        (Butter, 113 * 0.50)
+      "Liver + Sausage"
+      [ (Liver, 230),
+        (DuBretonSausageFrenchOnion, 100 * 4),
+        (Butter, 150)
       ]
     printMealMacros
       "Veal and Sausage"
       [ (FontaineLeanGroundVeal, 454),
         (Tallow, 5),
         (DuBretonSausageFrenchOnion, 100 * 2),
-        (DuBretonBaconBlackForest, 56 * 0.5),
-        (Butter, 113 * 0.5)
+        (Butter, 130)
       ]
     printMealMacros
-      "Liver, Salmon and Sausage"
-      [ (CostcoKirklandSockeyeSalmon, 195),
-        (Liver, 123),
-        (DuBretonSausageFrenchOnion, 100 * 2),
-        (Egg, 50 * 2),
-        (Butter, 113 + 15.3), -- First time doing *full* stick of butter + more
-        (QuebonWhippingCream, 12.9)
+      "Salmom & Sausages"
+      [ (SalmonAtlantic, 270),
+        (DuBretonSausageFrenchOnion, 400),
+        (Butter, 120)
       ]
     printMealMacros
-      "Salmom & 2 Sausages"
-      [ (SalmonAtlantic, 474),
+      "Wild Salmom & Sausages"
+      [ (CostcoKirklandSockeyeSalmon, 170),
+        -- (CostcoKirklandScallop, 50),
+        (Egg, 50*6),
+        (DuBretonSausageFrenchOnion, 300),
+        (Butter, 130)
+      ]
+    printMealMacros
+      "NZ grassfed ground beef & sausages"
+      [ (Maxi_GroundBeefMedium_NewZealand, 450),
         (DuBretonSausageFrenchOnion, 200),
-        (Butter, 97),
-        (QuebonWhippingCream, 15)
+        (Egg_NutriFreeRunMediumBrown, 91*1.5),
+        (Butter, 105-20)
       ]
     printMealMacros
-      "Belly take 2"
-      [ (PorkBelly_NoRenderedFat, 305),
-        (FontaineLeanGroundVeal, 454),
-        -- (Egg, 50 * 2),
-        (Butter, 40),
-        (Tallow, 10)
+      "2x egg/sausage & NZ grassfed"
+      [ (Maxi_GroundBeefMedium_NewZealand, 450),
+        (DuBretonSausageFrenchOnion, 200),
+        (Egg_NutriFreeRunMediumBrown, 91*1.5),
+        (Tallow, 5),
+        (Butter, 95)
+      ]
+    printMealMacros
+      "2x liver/sausage & NZ grassfed"
+      [ (Maxi_GroundBeefMedium_NewZealand, 450),
+        -- (DuBretonSausageFrenchOnion, 200),
+        (Egg_NutriFreeRunMediumBrown, 91*1.5),
+        (Liver, 115),
+        (Butter, 140)
       ]
 
+
+ 
 {-
 printMealMacros
-  "Sausages only"
-  [ (QuebonWhippingCream, 15 * 2),
-    (DuBretonSausageFrenchOnion, 100 * 4),
-    (SalmonAtlantic, 230),
-    (Butter, 100)
+  "NZ grassfed ground beef & liver"
+  [ (Maxi_GroundBeefMedium_NewZealand, 450),
+    (Liver, 123),
+    (Butter, 100),
+    (Tallow, 10),
+    (QuebonWhippingCream, 20)
   ]
 -}
 
