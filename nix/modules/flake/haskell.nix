@@ -3,7 +3,7 @@
   imports = [
     inputs.haskell-flake.flakeModule
   ];
-  perSystem = { self', lib, config, pkgs, ... }: {
+  perSystem = { self', system, lib, config, pkgs, ... }: {
     # Our only Haskell project. You can have multiple projects, but this template
     # has only one.
     # See https://github.com/srid/haskell-flake/blob/master/example/flake.nix
@@ -19,6 +19,8 @@
           (root + /README.md)
         ];
       });
+
+      basePackages = inputs.horizon-core.legacyPackages.${system};
 
       # The base package set (this value is the default)
       # basePackages = pkgs.haskellPackages;
@@ -36,7 +38,7 @@
       # Add your package overrides here
       settings = {
         mealmacro = {
-          stan = true;
+          # stan = true;
           # haddock = false;
         };
         /*
@@ -49,6 +51,11 @@
       # Development shell configuration
       devShell = {
         hlsCheck.enable = false;
+        tools = hp: {
+          ghcid = pkgs.ghcid;
+          haskell-language-server = pkgs.haskell.packages.ghc9101.haskell-language-server;
+          hlint = pkgs.hlint;
+        };
       };
 
       # What should haskell-flake add to flake outputs?
