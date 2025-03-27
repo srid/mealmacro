@@ -171,11 +171,9 @@ main = do
       "2x: liver/egg & ground beef"
       [ (FontaineLeanGroundVeal, 454),
         (Egg_NutriFreeRunMediumBrown, 91*1.5),
-        (Egg_NutriFreeRunMediumBrown, 91*2),
-        (Butter, 40),
         (Liver, 118),
         (Tallow, 20),
-        (Butter, 140)
+        (Butter, 150)
       ]
     printMealMacros
       "egg meal"
