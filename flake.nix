@@ -9,6 +9,8 @@
 
     git-hooks.url = "github:cachix/git-hooks.nix";
     git-hooks.flake = false;
+
+    horizon-core.url = "git+https://gitlab.horizon-haskell.net/package-sets/horizon-core?ref=lts/ghc-9.10.x";
   };
 
   outputs = inputs:

@@ -34,10 +34,7 @@ common shared
     relude
 
   default-extensions:
-    DataKinds
-    DerivingStrategies
     DerivingVia
-    LambdaCase
     MultiWayIf
     NoStarIsType
     OverloadedStrings
@@ -46,24 +43,15 @@ common shared
     ViewPatterns
 
   build-depends:
-    , aeson
-    , async
     , base          >=4   && <5
     , data-default
     , directory
-    , filepath
     , lens
-    , megaparsec
-    , mtl
-    , optics-core
-    , profunctors
     , relude        >=1.0
-    , shower
-    , time
     , with-utf8
 
   hs-source-dirs:     src
-  default-language:   GHC2021
+  default-language:   GHC2024
 
 executable mealmacro
   import:  shared
