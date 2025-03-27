@@ -157,23 +157,18 @@ main = do
         (Butter, 130)
       ]
     printMealMacros
-      "NZ grassfed ground beef & sausages"
-      [ (Maxi_GroundBeefMedium_NewZealand, 450),
-        (DuBretonSausageFrenchOnion, 200),
-        (Egg_NutriFreeRunMediumBrown, 91*1.5),
-        (Tallow, 20),
-        (Butter, 90)
-      ]
-    printMealMacros
       "2x egg/sausage & NZ grassfed"
       [ (Maxi_GroundBeefMedium_NewZealand, 450),
         (DuBretonSausageFrenchOnion, 200),
         (Egg_NutriFreeRunMediumBrown, 91*1.5),
         (Tallow, 20),
-        (Butter, 90)
+        (Butter, 90),
+        -- 3rd
+        (Egg_NutriFreeRunMediumBrown, 91*1.5),
+        (Butter, 30)
       ]
     printMealMacros
-      "2x liver/sausage & ground beef"
+      "2x: liver/egg & ground beef"
       [ (FontaineLeanGroundVeal, 454),
         (Egg_NutriFreeRunMediumBrown, 91*1.5),
         (Egg_NutriFreeRunMediumBrown, 91*2),
@@ -181,6 +176,13 @@ main = do
         (Liver, 118),
         (Tallow, 20),
         (Butter, 140)
+      ]
+    printMealMacros
+      "egg meal"
+      [
+        (Egg_NutriFreeRunMediumBrown, 91*3),
+        (Butter, 60),
+        (DuBretonSausageFrenchOnion, 200)
       ]
 
 -- ---------------------------------------------
