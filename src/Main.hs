@@ -107,15 +107,7 @@ main = do
   Utf8.withUtf8 $ do
     tests
     putStrLn "=> https://calculo.io/keto-calculator"
-    putStrLn "   To maintain 153 lbs => 220f & 110p"
-    printMealMacros
-      "Belly take 2"
-      [ (PorkBelly_NoRenderedFat, 300),
-        (FontaineLeanGroundVeal, 454),
-        (QuebonWhippingCream, 20),
-        (Butter, 30.6)
-      ]
-
+    putStrLn "   To not-lose-weight 155 lbs => 265f & 132p"
     printMealMacros
       "Costco Beef+Full Butter"
       [ (CostcoKirklandGroundBeef, 600),
@@ -123,66 +115,21 @@ main = do
         (Tallow, 20)
       ]
     printMealMacros
-      "Scallop + Sausages"
-      [ (DuBretonSausageFrenchOnion, 100 * 4),
-        (CostcoKirklandScallop, 160),
-        (Egg, 50*4),
-        (Butter, 130)
-      ]
-    printMealMacros
-      "Liver + Sausage"
-      [ (Liver, 230),
-        (DuBretonSausageFrenchOnion, 100 * 4),
-        (Butter, 150)
-      ]
-    printMealMacros
       "Veal and Sausage"
       [ (FontaineLeanGroundVeal, 454),
-        (Tallow, 5),
         (DuBretonSausageFrenchOnion, 100 * 2),
-        (Butter, 130)
-      ]
-    printMealMacros
-      "Salmom & Sausages"
-      [ (SalmonAtlantic, 270),
-        (DuBretonSausageFrenchOnion, 400),
+        (Tallow, 20),
         (Butter, 120)
       ]
     printMealMacros
-      "Wild Salmom & Sausages"
-      [ (CostcoKirklandSockeyeSalmon, 170),
-        -- (CostcoKirklandScallop, 50),
-        (Egg, 50*6),
-        (DuBretonSausageFrenchOnion, 300),
-        (Butter, 130)
-      ]
-    printMealMacros
-      "2x egg/sausage & NZ grassfed"
+      "Egg/sausage & NZ grassfed"
       [ (Maxi_GroundBeefMedium_NewZealand, 450),
         (DuBretonSausageFrenchOnion, 200),
-        (Egg_NutriFreeRunMediumBrown, 91*1.5),
         (Tallow, 20),
-        (Butter, 90),
-        -- 3rd
-        (Egg_NutriFreeRunMediumBrown, 91*1.5),
-        (Butter, 30)
+        (Egg_NutriFreeRunMediumBrown, 91*2),
+        (Butter, 120)
       ]
-    printMealMacros
-      "2x: liver/egg & ground beef"
-      [ (FontaineLeanGroundVeal, 454),
-        (Egg_NutriFreeRunMediumBrown, 91*1.5),
-        (Liver, 118),
-        (Tallow, 20),
-        (Butter, 150)
-      ]
-    printMealMacros
-      "egg meal"
-      [
-        (Egg_NutriFreeRunMediumBrown, 91*3),
-        (Butter, 60),
-        (DuBretonSausageFrenchOnion, 200)
-      ]
-
+    
 -- ---------------------------------------------
 -- Internal
 -- ---------------------------------------------
