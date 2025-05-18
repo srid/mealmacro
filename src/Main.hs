@@ -51,6 +51,7 @@ data Food
   | StripLoinSteak
   | DarkChocolate_Lindt95
   | AW_Burger_5oz
+  | Mayo
   deriving stock (Show, Eq, Ord)
 
 {- ORMOLU_DISABLE -}
@@ -100,6 +101,8 @@ foodNutrition = \case
   AW_Burger_5oz ->
     -- https://www.calorieking.com/us/en/foods/f/calories-in-meal-components-burger-patty/JK2WV-QzRQS8B1_gBkAivg
     def & protein .~ 26.9  & fat .~ 29.3              & quantity .~ 141
+  Mayo ->
+    def & protein .~ 1     & fat .~ 75
 {- ORMOLU_ENABLE -}
 
 main :: IO ()
@@ -122,13 +125,26 @@ main = do
         (Butter, 120)
       ]
     printMealMacros
-      "Egg/sausage & NZ grassfed"
+      "Sausage/Eggs & Ground Beef"
       [ (Maxi_GroundBeefMedium_NewZealand, 450),
         (DuBretonSausageFrenchOnion, 200),
         (Tallow, 20),
         (Egg_NutriFreeRunMediumBrown, 91*2),
         (Butter, 120)
       ]
+    printMealMacros
+      "FLIGHT"
+      [ (AW_Burger_5oz,  141*4),
+        (Mayo, 10*2),
+        (Butter, 125)
+      ]
+    printMealMacros
+      "Australia 🇦🇺EGG"
+      [ (Maxi_GroundBeefMedium_NewZealand, 450),
+        (Egg_NutriFreeRunMediumBrown, 91*4.5),
+        (Butter, 170)
+      ]
+ 
     
 -- ---------------------------------------------
 -- Internal
@@ -149,7 +165,7 @@ printMealMacros title meal = do
   putTextLn $ "## \ESC[1;4m" <> title <> "\ESC[0m" <> " (" <> show (round @_ @Int $ _quantity totalNutrition) <> "g)"
   let bar n = "\t\ESC[90m" ++ join (replicate (round @_ @Int $ n / 5) "◍") ++ "\ESC[0m"
   forM_ meal $ \(food, quantity') -> do
-    putStrLn $ printf "%30s\t=> %ig" (show @Text food) (round @_ @Int $ quantity')
+    putStrLn $ printf "%35s\t=> %ig" (show @Text food) (round @_ @Int $ quantity')
   putStrLn $ "Fat:\t\t" ++ show (round @_ @Int $ _fat totalNutrition) ++ bar (_fat totalNutrition)
   putStrLn $ "Protein:\t" ++ show (round @_ @Int $ _protein totalNutrition) ++ bar (_protein totalNutrition)
   putStrLn $ "Carbs:\t\t" ++ show (round @_ @Int $ _carbs totalNutrition)
