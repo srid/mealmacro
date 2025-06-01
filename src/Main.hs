@@ -52,6 +52,7 @@ data Food
   | DarkChocolate_Lindt95
   | AW_Burger_5oz
   | Mayo
+  | Woolworths_GroundBeef -- Added new food
   deriving stock (Show, Eq, Ord)
 
 {- ORMOLU_DISABLE -}
@@ -103,6 +104,8 @@ foodNutrition = \case
     def & protein .~ 26.9  & fat .~ 29.3              & quantity .~ 141
   Mayo ->
     def & protein .~ 1     & fat .~ 75
+  Woolworths_GroundBeef ->
+    def & protein .~ 18    & fat .~ 18
 {- ORMOLU_ENABLE -}
 
 main :: IO ()
@@ -139,11 +142,25 @@ main = do
         (Butter, 125)
       ]
     printMealMacros
-      "Australia 🇦🇺EGG"
-      [ (Maxi_GroundBeefMedium_NewZealand, 450),
-        (Egg_NutriFreeRunMediumBrown, 91*4.5),
-        (Butter, 170)
+      "Australia Breakfast"
+      [ (Egg, 50*4),
+        (Butter, 40+5),
+        (SalmonAtlantic, 100)
       ]
+    printMealMacros
+      "1. Australia Dinner"
+      [ (Woolworths_GroundBeef, 333),
+        (Egg, 50*4),
+        (Butter, 40+5)
+      ]
+    printMealMacros
+      "2. Australia Dinner"
+      [ (Woolworths_GroundBeef, 250),
+        (Egg, 50*4),
+        (Butter, 40+5)
+      ]
+ 
+
  
     
 -- ---------------------------------------------
