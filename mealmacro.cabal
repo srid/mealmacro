@@ -35,6 +35,7 @@ common shared
 
   default-extensions:
     DerivingVia
+    LambdaCase
     MultiWayIf
     NoStarIsType
     OverloadedStrings
@@ -51,7 +52,7 @@ common shared
     , with-utf8
 
   hs-source-dirs:     src
-  default-language:   GHC2024
+  default-language:   GHC2021
 
 executable mealmacro
   import:  shared

@@ -20,8 +20,6 @@
         ];
       });
 
-      basePackages = inputs.horizon-core.legacyPackages.${system};
-
       # The base package set (this value is the default)
       # basePackages = pkgs.haskellPackages;
 
@@ -51,11 +49,6 @@
       # Development shell configuration
       devShell = {
         hlsCheck.enable = false;
-        tools = hp: {
-          ghcid = pkgs.ghcid;
-          haskell-language-server = pkgs.haskell.packages.ghc9101.haskell-language-server;
-          hlint = pkgs.hlint;
-        };
       };
 
       # What should haskell-flake add to flake outputs?
