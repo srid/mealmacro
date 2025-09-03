@@ -159,6 +159,23 @@ main = do
         (Egg, 50*4),
         (Butter, 40+5)
       ]
+    printMealMacros
+      "Quebec Standard"
+      [ (Maxi_GroundBeefMedium_NewZealand, 450),
+      (Egg, 50*4),
+       (Butter, 90),
+       (Tallow, 40+40+10),
+       (CostcoKirklandSockeyeSalmon,  125)
+       ]
+    printMealMacros
+      "Quebec Standard, w/sausages"
+      [ -- (Maxi_GroundBeefMedium_NewZealand, 450/2),
+        (CostcoKirklandSockeyeSalmon,  125),
+        (DuBretonSausageFrenchOnion, 400),
+        (Tallow, 40+40+10),
+        (Egg, 50*4),
+        (Butter, 90)
+      ]
  
 
  
