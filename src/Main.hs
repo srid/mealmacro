@@ -10,50 +10,50 @@ import Text.Printf (printf)
 import Prelude hiding (some)
 
 data Nutrition = Nutrition
-  { _protein :: Rational,
-    _fat :: Rational,
-    _carbs :: Rational,
-    _quantity :: Rational
-  }
-  deriving stock (Show, Eq, Ord)
+    { _protein :: Rational
+    , _fat :: Rational
+    , _carbs :: Rational
+    , _quantity :: Rational
+    }
+    deriving stock (Show, Eq, Ord)
 
 makeLenses ''Nutrition
 
 instance Default Nutrition where
-  def = Nutrition {_protein = 0, _fat = 0, _carbs = 0, _quantity = 100}
+    def = Nutrition{_protein = 0, _fat = 0, _carbs = 0, _quantity = 100}
 
 instance Semigroup Nutrition where
-  (Nutrition p1 f1 c1 q1) <> (Nutrition p2 f2 c2 q2) =
-    Nutrition (p1 + p2) (f1 + f2) (c1 + c2) (q1 + q2)
+    (Nutrition p1 f1 c1 q1) <> (Nutrition p2 f2 c2 q2) =
+        Nutrition (p1 + p2) (f1 + f2) (c1 + c2) (q1 + q2)
 
 instance Monoid Nutrition where
-  mempty = def & quantity .~ 0
+    mempty = def & quantity .~ 0
 
 data Food
-  = SalmonAtlantic
-  | DuBretonSausageFrenchOnion
-  | DuBretonBaconBlackForest
-  | CostcoKirklandGroundBeef
-  | CostcoKirklandScallop
-  | CostcoKirklandSockeyeSalmon
-  | FontaineLeanGroundVeal
-  | Butter
-  | Tallow
-  | Egg -- A large egg
-  | Egg_NutriFreeRunMediumBrown
-  | Shrimp
-  | PorkBelly
-  | PorkBelly_NoRenderedFat
-  | Liver
-  | QuebonWhippingCream
-  | PorkRinds_BakenETS
-  | Maxi_GroundBeefMedium_NewZealand
-  | StripLoinSteak
-  | DarkChocolate_Lindt95
-  | AW_Burger_5oz
-  | Mayo
-  | Woolworths_GroundBeef -- Added new food
-  deriving stock (Show, Eq, Ord)
+    = SalmonAtlantic
+    | DuBretonSausageFrenchOnion
+    | DuBretonBaconBlackForest
+    | CostcoKirklandGroundBeef
+    | CostcoKirklandScallop
+    | CostcoKirklandSockeyeSalmon
+    | FontaineLeanGroundVeal
+    | Butter
+    | Tallow
+    | Egg -- A large egg
+    | Egg_NutriFreeRunMediumBrown
+    | Shrimp
+    | PorkBelly
+    | PorkBelly_NoRenderedFat
+    | Liver
+    | QuebonWhippingCream
+    | PorkRinds_BakenETS
+    | Maxi_GroundBeefMedium_NewZealand
+    | StripLoinSteak
+    | DarkChocolate_Lindt95
+    | AW_Burger_5oz
+    | Mayo
+    | Woolworths_GroundBeef -- Added new food
+    deriving stock (Show, Eq, Ord)
 
 {- ORMOLU_DISABLE -}
 foodNutrition :: Food -> Nutrition
@@ -108,85 +108,103 @@ foodNutrition = \case
     def & protein .~ 18    & fat .~ 18
 {- ORMOLU_ENABLE -}
 
+scrambled :: Rational -> [(Food, Rational)]
+scrambled n =
+    [ (Egg, 50 * n)
+    , (Butter, 10 * n)
+    ]
+
+scrambledTallow :: Rational -> [(Food, Rational)]
+scrambledTallow n =
+    [ (Egg, 50 * n)
+    , (Tallow, 10 * n)
+    ]
+
+maxiTallow :: [(Food, Rational)]
+maxiTallow =
+    [ (Tallow, 40)
+    , (Maxi_GroundBeefMedium_NewZealand, 450)
+    ]
+
+wildSalmon :: [(Food, Rational)]
+wildSalmon =
+    [ (CostcoKirklandSockeyeSalmon, 125)
+    , (Tallow, 20)
+    ]
+
 main :: IO ()
 main = do
-  Utf8.withUtf8 $ do
-    tests
-    putStrLn "=> https://calculo.io/keto-calculator"
-    putStrLn "   To not-lose-weight 155 lbs => 265f & 132p"
-    printMealMacros
-      "Costco Beef+Full Butter"
-      [ (CostcoKirklandGroundBeef, 600),
-        (Butter, 140),
-        (Tallow, 20)
-      ]
-    printMealMacros
-      "Veal and Sausage"
-      [ (FontaineLeanGroundVeal, 454),
-        (DuBretonSausageFrenchOnion, 100 * 2),
-        (Tallow, 20),
-        (Butter, 120)
-      ]
-    printMealMacros
-      "Sausage/Eggs & Ground Beef"
-      [ (Maxi_GroundBeefMedium_NewZealand, 450),
-        (DuBretonSausageFrenchOnion, 200),
-        (Tallow, 20),
-        (Egg_NutriFreeRunMediumBrown, 91*2),
-        (Butter, 120)
-      ]
-    printMealMacros
-      "FLIGHT"
-      [ (AW_Burger_5oz,  141*4),
-        (Mayo, 10*2),
-        (Butter, 125)
-      ]
-    printMealMacros
-      "Australia Breakfast"
-      [ (Egg, 50*4),
-        (Butter, 40+5),
-        (SalmonAtlantic, 100)
-      ]
-    printMealMacros
-      "1. Australia Dinner"
-      [ (Woolworths_GroundBeef, 333),
-        (Egg, 50*4),
-        (Butter, 40+5)
-      ]
-    printMealMacros
-      "2. Australia Dinner"
-      [ (Woolworths_GroundBeef, 250),
-        (Egg, 50*4),
-        (Butter, 40+5)
-      ]
-    printMealMacros
-      "Quebec Standard"
-      [ (Maxi_GroundBeefMedium_NewZealand, 450),
-      (Egg, 50*4),
-       (Butter, 90),
-       (Tallow, 40+40+10),
-       (CostcoKirklandSockeyeSalmon,  125)
-       ]
-    printMealMacros
-      "Quebec Standard, w/sausages"
-      [ -- (Maxi_GroundBeefMedium_NewZealand, 450/2),
-        (CostcoKirklandSockeyeSalmon,  125),
-        (DuBretonSausageFrenchOnion, 400),
-        (Tallow, 40+40+10),
-        (Egg, 50*4),
-        (Butter, 90)
-      ]
- 
+    Utf8.withUtf8 $ do
+        tests
+        putStrLn "=> https://calculo.io/keto-calculator"
+        putStrLn "   To not-lose-weight 155 lbs => 265f & 132p"
+        printMealMacros
+            "Costco Beef+Full Butter"
+            [ (CostcoKirklandGroundBeef, 600)
+            , (Butter, 140)
+            , (Tallow, 20)
+            ]
+        printMealMacros
+            "Veal and Sausage"
+            [ (FontaineLeanGroundVeal, 454)
+            , (DuBretonSausageFrenchOnion, 100 * 2)
+            , (Tallow, 20)
+            , (Butter, 120)
+            ]
+        printMealMacros
+            "Sausage/Eggs & Ground Beef"
+            [ (Maxi_GroundBeefMedium_NewZealand, 450)
+            , (DuBretonSausageFrenchOnion, 200)
+            , (Tallow, 20)
+            , (Egg_NutriFreeRunMediumBrown, 91 * 2)
+            , (Butter, 120)
+            ]
+        printMealMacros
+            "FLIGHT"
+            [ (AW_Burger_5oz, 141 * 4)
+            , (Mayo, 10 * 2)
+            , (Butter, 125)
+            ]
+        printMealMacros
+            "Australia Breakfast"
+            [ (Egg, 50 * 4)
+            , (Butter, 40 + 5)
+            , (SalmonAtlantic, 100)
+            ]
+        printMealMacros
+            "1. Australia Dinner"
+            [ (Woolworths_GroundBeef, 333)
+            , (Egg, 50 * 4)
+            , (Butter, 40 + 5)
+            ]
+        printMealMacros
+            "2. Australia Dinner"
+            [ (Woolworths_GroundBeef, 250)
+            , (Egg, 50 * 4)
+            , (Butter, 40 + 5)
+            ]
+        printMealMacros
+            "Quebec Standard"
+            $ scrambledTallow 4
+                <> maxiTallow
+                <> wildSalmon
+                <> [ (Butter, 80) -- coffee
+                   ]
+        printMealMacros
+            "Quebec Standard, w/sausages"
+            $ scrambledTallow 10
+                <> wildSalmon
+                <> [ (DuBretonSausageFrenchOnion, 200)
+                   , (Butter, 80) -- coffee
+                   ]
 
- 
-    
 -- ---------------------------------------------
 -- Internal
 -- ---------------------------------------------
 
 scaleNutritionToGrams :: Nutrition -> Rational -> Nutrition
 scaleNutritionToGrams (Nutrition p f c q) grams =
-  Nutrition (p * grams / q) (f * grams / q) (c * grams / q) grams
+    Nutrition (p * grams / q) (f * grams / q) (c * grams / q) grams
 
 nutritionCalories :: Nutrition -> Rational
 nutritionCalories (Nutrition p f c _q) = p * 4 + f * 9 + c * 4
@@ -195,24 +213,24 @@ type Meal = [(Food, Rational)]
 
 printMealMacros :: Text -> Meal -> IO ()
 printMealMacros title meal = do
-  let totalNutrition = sumNutrition meal
-  putTextLn $ "## \ESC[1;4m" <> title <> "\ESC[0m" <> " (" <> show (round @_ @Int $ _quantity totalNutrition) <> "g)"
-  let bar n = "\t\ESC[90m" ++ join (replicate (round @_ @Int $ n / 5) "◍") ++ "\ESC[0m"
-  forM_ meal $ \(food, quantity') -> do
-    putStrLn $ printf "%35s\t=> %ig" (show @Text food) (round @_ @Int $ quantity')
-  putStrLn $ "Fat:\t\t" ++ show (round @_ @Int $ _fat totalNutrition) ++ bar (_fat totalNutrition)
-  putStrLn $ "Protein:\t" ++ show (round @_ @Int $ _protein totalNutrition) ++ bar (_protein totalNutrition)
-  putStrLn $ "Carbs:\t\t" ++ show (round @_ @Int $ _carbs totalNutrition)
-  putStrLn $ "Calories:\t" ++ show (round @_ @Int $ nutritionCalories totalNutrition)
-  putStrLn $ "Fat:Protein:\t" ++ printf "\ESC[1m%.2f\ESC[0m" (toDecimal $ _fat totalNutrition / _protein totalNutrition)
-  putStrLn ""
+    let totalNutrition = sumNutrition meal
+    putTextLn $ "## \ESC[1;4m" <> title <> "\ESC[0m" <> " (" <> show (round @_ @Int $ _quantity totalNutrition) <> "g)"
+    let bar n = "\t\ESC[90m" ++ join (replicate (round @_ @Int $ n / 5) "◍") ++ "\ESC[0m"
+    forM_ meal $ \(food, quantity') -> do
+        putStrLn $ printf "%35s\t=> %ig" (show @Text food) (round @_ @Int $ quantity')
+    putStrLn $ "Fat:\t\t" ++ show (round @_ @Int $ _fat totalNutrition) ++ bar (_fat totalNutrition)
+    putStrLn $ "Protein:\t" ++ show (round @_ @Int $ _protein totalNutrition) ++ bar (_protein totalNutrition)
+    putStrLn $ "Carbs:\t\t" ++ show (round @_ @Int $ _carbs totalNutrition)
+    putStrLn $ "Calories:\t" ++ show (round @_ @Int $ nutritionCalories totalNutrition)
+    putStrLn $ "Fat:Protein:\t" ++ printf "\ESC[1m%.2f\ESC[0m" (toDecimal $ _fat totalNutrition / _protein totalNutrition)
+    putStrLn ""
 
 sumNutrition :: Meal -> Nutrition
 sumNutrition meal = mconcat nutritions
   where
     nutritions =
-      meal <&> \(food, q) ->
-        scaleNutritionToGrams (foodNutrition food) q
+        meal <&> \(food, q) ->
+            scaleNutritionToGrams (foodNutrition food) q
 
 toDecimal :: Rational -> Double
 toDecimal r = fromIntegral (numerator r) / fromIntegral (denominator r)
@@ -220,16 +238,16 @@ toDecimal r = fromIntegral (numerator r) / fromIntegral (denominator r)
 -- TODO: tidy it up.
 tests :: IO ()
 tests = do
-  let n =
-        sumNutrition
-          [ (SalmonAtlantic, 400),
-            (DuBretonSausageFrenchOnion, 300),
-            (Butter, 113 * 0.50)
-          ]
-      roundTo :: Int -> Double -> Double
-      roundTo num x = fromIntegral @Int @Double (round (x * 10 ^ num)) / 10 ^ num
-      actual = roundTo 2 $ toDecimal $ _fat n / _protein n
-      expected = roundTo 2 1.34
-  if actual == expected
-    then putStrLn "Test passed"
-    else error $ "Test failed: " <> show actual
+    let n =
+            sumNutrition
+                [ (SalmonAtlantic, 400)
+                , (DuBretonSausageFrenchOnion, 300)
+                , (Butter, 113 * 0.50)
+                ]
+        roundTo :: Int -> Double -> Double
+        roundTo num x = fromIntegral @Int @Double (round (x * 10 ^ num)) / 10 ^ num
+        actual = roundTo 2 $ toDecimal $ _fat n / _protein n
+        expected = roundTo 2 1.34
+    if actual == expected
+        then putStrLn "Test passed"
+        else error $ "Test failed: " <> show actual
