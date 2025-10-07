@@ -114,18 +114,21 @@ scrambled n =
     , (Butter, 10 * n)
     ]
 
+-- | Scrambled eggs with 10g tallow per egg
 scrambledTallow :: Rational -> [(Food, Rational)]
 scrambledTallow n =
     [ (Egg, 50 * n)
     , (Tallow, 10 * n)
     ]
 
+-- | NZ beef with 40g tallow
 maxiTallow :: [(Food, Rational)]
 maxiTallow =
     [ (Tallow, 40)
     , (Maxi_GroundBeefMedium_NewZealand, 450)
     ]
 
+-- | Wild costco salmon with ~20g tallow
 wildSalmon :: [(Food, Rational)]
 wildSalmon =
     [ (CostcoKirklandSockeyeSalmon, 125)
@@ -188,14 +191,14 @@ main = do
             $ scrambledTallow 4
                 <> maxiTallow
                 <> wildSalmon
-                <> [ (Butter, 80) -- coffee
+                <> [ (Butter, 50) -- coffee
                    ]
         printMealMacros
             "Quebec Standard, w/sausages"
             $ scrambledTallow 10
                 <> wildSalmon
                 <> [ (DuBretonSausageFrenchOnion, 200)
-                   , (Butter, 80) -- coffee
+                   , (Butter, 50) -- coffee
                    ]
 
 -- ---------------------------------------------
