@@ -194,11 +194,19 @@ main = do
                 <> [ (Butter, 50) -- coffee
                    ]
         printMealMacros
-            "Quebec Standard, w/sausages"
-            $ scrambledTallow 10
+            "Quebec Standard, sausages over salmon"
+            $ scrambledTallow 4
+                <> maxiTallow
+                <> [ (DuBretonSausageFrenchOnion, 200)
+                   ]
+                <> [ (Butter, 30) -- coffee
+                   ]
+        printMealMacros
+            "Quebec Standard, sausages over beef"
+            $ scrambledTallow 12
                 <> wildSalmon
                 <> [ (DuBretonSausageFrenchOnion, 200)
-                   , (Butter, 50) -- coffee
+                   -- , (Butter, 50) -- coffee
                    ]
 
 -- ---------------------------------------------
