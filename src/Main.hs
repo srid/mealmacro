@@ -53,6 +53,7 @@ data Food
     | AW_Burger_5oz
     | Mayo
     | Woolworths_GroundBeef -- Added new food
+    | PerronMediumCheddar
     deriving stock (Show, Eq, Ord)
 
 {- ORMOLU_DISABLE -}
@@ -106,6 +107,8 @@ foodNutrition = \case
     def & protein .~ 1     & fat .~ 75
   Woolworths_GroundBeef ->
     def & protein .~ 18    & fat .~ 18
+  PerronMediumCheddar ->
+    def & protein .~ 7     & fat .~ 9   & carbs .~ 2      & quantity .~ 30
 {- ORMOLU_ENABLE -}
 
 scrambled :: Rational -> [(Food, Rational)]
@@ -127,6 +130,13 @@ maxiTallow =
     [ (Tallow, 40)
     , (Maxi_GroundBeefMedium_NewZealand, 450)
     ]
+
+maxiTallowHalf :: [(Food, Rational)]
+maxiTallowHalf =
+    [ (Tallow, 20)
+    , (Maxi_GroundBeefMedium_NewZealand, 450/2)
+    ]
+
 
 -- | Wild costco salmon with ~20g tallow
 wildSalmon :: [(Food, Rational)]
@@ -187,26 +197,25 @@ main = do
             , (Butter, 40 + 5)
             ]
         printMealMacros
-            "Quebec Standard"
-            $ scrambledTallow 4
+            "NZ in Quebec"
+            $ scrambledTallow 5
                 <> maxiTallow
                 <> wildSalmon
-                <> [ (Butter, 50) -- coffee
+                <> [ (Butter, 50*2) -- coffee
                    ]
         printMealMacros
-            "Quebec Standard, sausages over salmon"
-            $ scrambledTallow 4
-                <> maxiTallow
-                <> [ (DuBretonSausageFrenchOnion, 200)
-                   ]
-                <> [ (Butter, 30) -- coffee
+            "duBreton in Quebec"
+            $ scrambledTallow (6 * 2 + 2)
+                <> wildSalmon
+                <> [ (Butter, 20*2) -- coffee
+                   , (DuBretonSausageFrenchOnion, 100*2)
                    ]
         printMealMacros
-            "Quebec Standard, sausages over beef"
+            "IND"
             $ scrambledTallow 12
                 <> wildSalmon
-                <> [ (DuBretonSausageFrenchOnion, 200)
-                   -- , (Butter, 50) -- coffee
+                <> wildSalmon
+                <> [ (Butter, 50*2) -- coffee
                    ]
 
 -- ---------------------------------------------
