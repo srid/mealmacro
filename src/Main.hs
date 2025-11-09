@@ -197,26 +197,27 @@ main = do
             , (Butter, 40 + 5)
             ]
         printMealMacros
-            "NZ in Quebec"
+            "NZ in Quebec (growing)"
             $ scrambledTallow 5
                 <> maxiTallow
                 <> wildSalmon
-                <> [ (Butter, 50*2) -- coffee
+                <> [ (Butter, 55*2 + 10) -- coffee
                    ]
         printMealMacros
-            "duBreton in Quebec"
-            $ scrambledTallow (6 * 2 + 2)
-                <> wildSalmon
-                <> [ (Butter, 20*2) -- coffee
-                   , (DuBretonSausageFrenchOnion, 100*2)
+            "NZ in Quebec (limit fat)"
+            $ -- scrambledTallow 4
+                 maxiTallow
+                -- <> wildSalmon
+                -- <> [ (DuBretonSausageFrenchOnion, 200)]
+                <> [ (Butter, 60) -- coffee
                    ]
-        printMealMacros
-            "IND"
-            $ scrambledTallow 12
-                <> wildSalmon
-                <> wildSalmon
-                <> [ (Butter, 50*2) -- coffee
-                   ]
+        -- printMealMacros
+        --     "IND"
+        --     $ scrambledTallow 12
+        --         <> wildSalmon
+        --         <> wildSalmon
+        --         <> [ (Butter, 50*2) -- coffee
+        --            ]
 
 -- ---------------------------------------------
 -- Internal
